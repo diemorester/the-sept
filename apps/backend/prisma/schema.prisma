@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  EO
+  ADMIN
+}
+
+enum TicketType {
+  FREE
+  PAID
+}
+
+enum EventCategory {
+  MUSIC
+  ART
+  CULINARY
+  SPORT
+  GAMING
+  BEAUTY
+  SOCIAL
+  TECH
+}
+
+enum Status {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+model User {
+  id            String          @id @default(cuid())
+  username      String          @unique
+  email         String          @unique
+  password      String
+  avatar        String?
+  isVerify      Boolean         @default(false)
+  phoneNumber   String?
+  role          Role            @default(USER)
+  point         Int             @default(0)
+  referralCode  String          @unique
+  referral      String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  registrations Registration[]
+  transactions  Transaction[]
+  reviews       Review[]
+
+  events        Event[]
+}
+
+model Event {
+  id            String          @id @default(cuid())
+  name          String          @unique
+  description   String
+  price         Decimal?        @default(0)
+  date          DateTime
+  location      String
+  image         String?
+  seats         Int             @default(0)
+  ticketType    TicketType
+  category      EventCategory
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  eoId          String
+  eo            User            @relation(fields: [eoId], references: [id])
+  
+  registrations Registration[]
+  reviews       Review[]
+  promotion     Promotion?
+  transactions  Transaction[]
+}
+
+model Registration {
+  id        String   @id @default(cuid())
+  userId    String
+  eventId   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
+}
+
+model Transaction {
+  id            String   @id @default(cuid())
+  price         Decimal
+  totalDiscount Decimal  @default(0)
+  finalPrice    Decimal
+  paymentLink   String
+  quantity      Int
+  status        Status   @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  eventId       String
+  userId        String
+
+  event         Event    @relation(fields: [eventId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
+}
+
+model Review {
+  id      String  @id @default(cuid())
+  review  String
+  ratings Int
+  userId  String
+  eventId String
+
+  user    User    @relation(fields: [userId], references: [id])
+  event   Event   @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
+}
+
+model Promotion {
+  id          String   @id @default(cuid())
+  startDate   DateTime
+  endDate     DateTime
+  voucherCode String
+  quota       Int
+  percentage  Int
+  eventId     String   @unique
+
+  event       Event    @relation(fields: [eventId], references: [id])
+}

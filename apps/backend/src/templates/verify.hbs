@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" style="margin: 0; padding: 0;">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Verify Your Email - the-sept</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        background-color: #0d0d0d;
+        color: #e0e0e0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: auto;
+        padding: 2rem;
+        background-color: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 8px;
+      }
+
+      .logo {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ffffff;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .message {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .verify-button {
+        display: block;
+        width: fit-content;
+        margin: 0 auto;
+        background-color: #ffffff;
+        color: #0d0d0d;
+        padding: 0.75rem 1.5rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .verify-button:hover {
+        background-color: #e0e0e0;
+      }
+
+      .footer {
+        margin-top: 2rem;
+        font-size: 0.85rem;
+        color: #777;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">the-sept</div>
+      <div class="message">
+        Welcome to <strong>the-sept</strong>.<br />
+        You're just one step away from entering the void.<br />
+        Tap the button below to verify your email.
+      </div>
+
+      <a href="{{verificationLink}}" class="verify-button">Verify Email</a>
+
+      <div class="footer">
+        If you didn’t request this, you can safely ignore this email.<br />
+        This link will expire in 24 hours.
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "the-sept",
+  "version": "1.0.0",
+  "main": "index.js",
+  "packageManager": "npm@10.9.2",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "serve": "turbo run serve",
+    "prepare": "husky install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "turbo": "^2.5.0"
+  }
+}

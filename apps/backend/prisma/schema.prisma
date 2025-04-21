@@ -42,44 +42,44 @@ enum Status {
 }
 
 model User {
-  id            String          @id @default(cuid())
-  username      String          @unique
-  email         String          @unique
-  password      String
-  avatar        String?
-  isVerify      Boolean         @default(false)
-  phoneNumber   String?
-  role          Role            @default(USER)
-  point         Int             @default(0)
-  referralCode  String          @unique
-  referral      String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  password     String
+  avatar       String?
+  isVerified   Boolean  @default(false)
+  phoneNumber  String?
+  role         Role     @default(USER)
+  point        Int      @default(0)
+  referralCode String   @unique
+  referral     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   registrations Registration[]
   transactions  Transaction[]
   reviews       Review[]
 
-  events        Event[]
+  events Event[]
 }
 
 model Event {
-  id            String          @id @default(cuid())
-  name          String          @unique
-  description   String
-  price         Decimal?        @default(0)
-  date          DateTime
-  location      String
-  image         String?
-  seats         Int             @default(0)
-  ticketType    TicketType
-  category      EventCategory
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id          String        @id @default(cuid())
+  name        String        @unique
+  description String
+  price       Decimal?      @default(0)
+  date        DateTime
+  location    String
+  image       String?
+  seats       Int           @default(0)
+  ticketType  TicketType
+  category    EventCategory
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
-  eoId          String
-  eo            User            @relation(fields: [eoId], references: [id])
-  
+  eoId String
+  eo   User   @relation(fields: [eoId], references: [id])
+
   registrations Registration[]
   reviews       Review[]
   promotion     Promotion?
@@ -92,8 +92,8 @@ model Registration {
   eventId   String
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id])
-  event     Event    @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
 
   @@unique([userId, eventId])
 }
@@ -109,22 +109,22 @@ model Transaction {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  eventId       String
-  userId        String
+  eventId String
+  userId  String
 
-  event         Event    @relation(fields: [eventId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
 }
 
 model Review {
-  id      String  @id @default(cuid())
+  id      String @id @default(cuid())
   review  String
   ratings Int
   userId  String
   eventId String
 
-  user    User    @relation(fields: [userId], references: [id])
-  event   Event   @relation(fields: [eventId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
 
   @@unique([userId, eventId])
 }
@@ -138,5 +138,5 @@ model Promotion {
   percentage  Int
   eventId     String   @unique
 
-  event       Event    @relation(fields: [eventId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
 }

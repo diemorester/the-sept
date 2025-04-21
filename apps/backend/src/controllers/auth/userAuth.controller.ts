@@ -1,10 +1,10 @@
 import sendVerificationEmail from "../../helpers/sendVerificationEmail.js";
 import generateToken from "../../helpers/tokenGenerator.js";
-import { registerUserService } from "../../services/auth/userAuth.service.js";
-import { NextFunction, Request, Response } from "express";
+import { registerUserService, verifyUserService } from "../../services/auth/userAuth.service.js";
+import { Request, Response } from "express";
 
 export class UserController {
-    async registerUser(req: Request, res: Response, next: NextFunction) {
+    async registerUserController(req: Request, res: Response) {
         const user = await registerUserService(req.body);
 
         const payload = {
@@ -22,5 +22,14 @@ export class UserController {
             msg: "Account created, please check your email for verification",
             token
         })
+    }
+
+    async verifyUserController(req: Request, res: Response) {
+        const user = await verifyUserService(req.user?.id!)
+
+        return res.status(200).send({
+            msg: 'User Verified',
+            user,
+        });
     }
 }

@@ -33,3 +33,24 @@ export const registerUserService = async (body: RegisterUser) => {
         throw error;
     }
 };
+
+export const verifyUserService = async (id: string) => {
+    const user = await prisma.user.findUnique({
+        where: { id },
+    });
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    if (user.isVerified) {
+        throw new Error('User has already been verified');
+    }
+
+    const verifiedUser = await prisma.user.update({
+        where: { id },
+        data: { isVerified: true },
+    });
+
+    return verifiedUser
+}

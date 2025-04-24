@@ -1,10 +1,12 @@
-import App from "./app.js";
+import './config.ts';
+import { createApp } from "./app.js"
+import { PORT } from "./config.js";
 
 const main = () => {
-    // init db here
-
-    const app = new App();
-    app.start();
+    const app = createApp();
+    app.listen(PORT, () => {
+        console.log(`  ➜  [API] Local:   http://localhost:${PORT}/`);
+    });
 };
 
 main();

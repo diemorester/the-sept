@@ -1,22 +1,15 @@
 import { Router } from "express";
-import { UserController } from "../../controllers/auth/userAuth.controller.js";
-import { asyncHandler } from "../../utils/asyncHandler.js";
+import { asyncHandler } from "../../helpers/asyncHandler.js";
+import { loginUserController, registerUserController, verifyUserController } from "../../controllers/auth/userAuth.controller.js";
+import { authMiddleware } from "../../middleware/auth.middleware.js";
 
-export class UserRouter {
-    private router: Router;
-    private userController: UserController;
+const userRouter = Router();
 
-    constructor() {
-        this.userController = new UserController();
-        this.router = Router();
-        this.initializeRoutes();
-    }
+userRouter.post('/register', asyncHandler(registerUserController));
+userRouter.post('/login', asyncHandler(loginUserController));
+userRouter.patch('/verify',
+    asyncHandler(authMiddleware),
+    asyncHandler(verifyUserController)
+);
 
-    private initializeRoutes(): void {
-        this.router.post('/register', asyncHandler(this.userController.registerUser));
-    }
-
-    getRouter(): Router {
-        return this.router;
-    }
-}
+export default userRouter;

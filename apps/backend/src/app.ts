@@ -1,59 +1,36 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { PORT } from './config.js';
-import { UserRouter } from './routers/auth/userAuth.route.js';
+import userRouter from './routers/auth/userAuth.route.js';
 
-export default class App {
-    private readonly app: Express;
-    private readonly PORT = process.env.PORT || 8000;
+export const createApp = (): Express => {
+    const app = express();
 
-    constructor() {
-        this.app = express();
-        this.setupMiddlewares();
-        this.setupRoutes();
-        this.setupErrorHandlers();
-    }
+    app.use(cors());
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
-    private setupMiddlewares(): void {
-        this.app.use(cors());
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
-    }
+    app.get('/api', (req: Request, res: Response) => {
+        res.send('the-sept');
+    });
 
-    private setupErrorHandlers(): void {
-        this.app.use((req: Request, res: Response, next: NextFunction) => {
-            if (req.path.includes('/api')) {
-                res.status(404).send('Not found!');
-            } else {
-                next();
-            }
-        });
+    app.use('/api/user', userRouter);
 
-        this.app.use(
-            (err: Error, req: Request, res: Response, next: NextFunction) => {
-                if (req.path.includes('/api/')) {
-                    console.error('[ERROR]', err.stack);
-                    res.status(500).send(err.message);
-                } else {
-                    next();
-                }
-            },
-        );
-    }
+    app.use((req: Request, res: Response, next: NextFunction) => {
+        if (req.path.includes('/api')) {
+            res.status(404).send('Not found!');
+        } else {
+            next();
+        }
+    });
 
-    private setupRoutes(): void {
-        const userRouter = new UserRouter();
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+        if (req.path.includes('/api/')) {
+            console.error('[ERROR]', err.stack);
+            res.status(500).send(err.message);
+        } else {
+            next();
+        }
+    });
 
-        this.app.get('/api', (req: Request, res: Response) => {
-            res.send('the-sept')
-        });
-
-        this.app.use('/api/user', userRouter.getRouter());
-    }
-
-    public start(): void {
-        this.app.listen(PORT, () => {
-            console.log(`  ➜  [API] Local:   http://localhost:${PORT}/`);
-        });
-    }
-}
+    return app;
+};

@@ -9,7 +9,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["./src/custom.d.ts"],
   },
   "ts-node": {
     "esm": true

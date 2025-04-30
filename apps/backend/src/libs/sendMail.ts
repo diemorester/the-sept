@@ -16,11 +16,11 @@ interface MailOptions {
 }
 
 const sendMail = async ({ to, subject, template, context }: MailOptions) => {
-    //   const templatePath = path.join(__dirname, '../../../src/templates', 'verify.hbs');  route folder waktu deployment dulu
-    const templatePath = path.join(__dirname, "../templates/verify.hbs");
+    // const templatePath = path.join(__dirname, '../../../src/templates', `${template}.hbs`);  route folder waktu deployment dulu
+    const templatePath = path.join(__dirname, "../templates", `${template}.hbs`);
     const source = await readFile(templatePath, 'utf-8');
     const compiled = handlebars.compile(source);
-    const html = compiled({ context });
+    const html = compiled(context);
 
     await transporter.sendMail({
         to,

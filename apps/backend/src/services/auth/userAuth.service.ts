@@ -130,9 +130,29 @@ export const forgotPasswordService = async (email: string) => {
         template: 'forgot-password',
         context: {
             name: user.username,
-            link: `${process.env.BASE_URL_WEB}/forgot-password/${token}`
+            link: `${process.env.BASE_URL_WEB}/forgot-password/${token}`,
         },
     });
 
     return user;
+};
+
+export const resetPasswordService = async (email: string, password: string) => {
+    if (!password || password.length < 6)
+        throw new Error('Password must be at least 6 characters long');
+
+    const user = await prisma.user.findUnique({
+        where: { email }
+    });
+
+    if (!user) throw new Error('User not found');
+
+    const hashedPassword = await hashPassword(password);
+
+    const updatedUser = await prisma.user.update({
+        where: { email },
+        data: { password: hashedPassword}
+    });
+
+    return updatedUser;
 };

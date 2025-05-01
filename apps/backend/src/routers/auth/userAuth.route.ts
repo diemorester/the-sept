@@ -1,20 +1,24 @@
 import { Router } from "express";
 import { asyncHandler } from "../../helpers/asyncHandler.js";
-import { forgotPasswordController, loginUserController, registerUserController, resetPasswordController, verifyUserController } from "../../controllers/auth/userAuth.controller.js";
+import { changePasswordController, forgotPasswordController, loginUserController, registerUserController, resetPasswordController, verifyUserController } from "../../controllers/auth/userAuth.controller.js";
 import { authMiddleware } from "../../middleware/auth.middleware.js";
 
-const userRouter = Router();
+const authRouter = Router();
 
-userRouter.post('/register', asyncHandler(registerUserController));
-userRouter.post('/login', asyncHandler(loginUserController));
-userRouter.post('/forgot-password', asyncHandler(forgotPasswordController));
-userRouter.patch('/verify',
+authRouter.post('/register', asyncHandler(registerUserController));
+authRouter.post('/login', asyncHandler(loginUserController));
+authRouter.post('/forgot-password', asyncHandler(forgotPasswordController));
+authRouter.patch('/verify',
     asyncHandler(authMiddleware),
     asyncHandler(verifyUserController)
 );
-userRouter.patch('/reset-password',
+authRouter.patch('/reset-password',
     asyncHandler(authMiddleware),
     asyncHandler(resetPasswordController)
 );
+authRouter.patch('/change-password',
+    asyncHandler(authMiddleware),
+    asyncHandler(changePasswordController)
+);
 
-export default userRouter;
+export default authRouter;

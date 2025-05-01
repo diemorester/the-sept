@@ -42,14 +42,20 @@ enum Status {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  username     String   @unique
-  email        String   @unique
-  password     String
-  avatar       String?
-  isVerified   Boolean  @default(false)
-  phoneNumber  String?
-  role         Role     @default(USER)
+  id          String  @id @default(cuid())
+  username    String  @unique
+  email       String  @unique
+  password    String
+  avatar      String?
+  isVerified  Boolean @default(false)
+  phoneNumber String?
+  role        Role    @default(USER)
+
+  otp                   String?
+  otpExpired            DateTime?
+  changeEmailExpired    DateTime?
+  changePasswordExpired DateTime?
+
   point        Int      @default(0)
   referralCode String   @unique
   referral     String?

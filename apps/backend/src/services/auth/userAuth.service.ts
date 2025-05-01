@@ -138,9 +138,6 @@ export const forgotPasswordService = async (email: string) => {
 };
 
 export const resetPasswordService = async (email: string, password: string) => {
-    if (!password || password.length < 6)
-        throw new Error('Password must be at least 6 characters long');
-
     const user = await prisma.user.findUnique({
         where: { email }
     });
@@ -151,8 +148,38 @@ export const resetPasswordService = async (email: string, password: string) => {
 
     const updatedUser = await prisma.user.update({
         where: { email },
-        data: { password: hashedPassword}
+        data: { password: hashedPassword }
     });
 
     return updatedUser;
+};
+
+export const changePasswordService = async (id: string, oldPassword: string, newPassword: string) => {
+    const now = new Date();
+    const user = await prisma.user.findUnique({
+        where: { id },
+    });
+
+    if (!user) throw new Error('User not found');
+    if (user.changePasswordExpired && now.getTime() - user.changePasswordExpired.getTime() < 20 * 60 * 60 * 1000) throw new Error('You changed your password too frequent');
+
+    const validPassword = await compare(oldPassword, user.password);
+
+    if (!validPassword) throw new Error('Old password is incorrect');
+
+    if (await compare(newPassword, user.password)) {
+        throw new Error('New password cannot be the same as old password');
+    };
+
+    const hashedPassword = await hashPassword(newPassword);
+
+    const password = await prisma.user.update({
+        where: { id },
+        data: {
+            password: hashedPassword,
+            changePasswordExpired: new Date(),
+        },
+    });
+
+    return password;
 };

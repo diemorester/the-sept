@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import authRouter from './routers/auth/userAuth.route.js';
+import authRouter from './routers/auth/auth.route.js';
+import userRouter from './routers/user/user.route.js';
 
 export const createApp = (): Express => {
     const app = express();
@@ -14,6 +15,7 @@ export const createApp = (): Express => {
     });
 
     app.use('/api/auth', authRouter);
+    app.use('/api/user', userRouter);
 
     app.use((req: Request, res: Response, next: NextFunction) => {
         if (req.path.includes('/api')) {

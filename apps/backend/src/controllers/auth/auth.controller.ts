@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { changePasswordService, forgotPasswordService, loginUserService, registerUserService, resetPasswordService, verifyUserService } from "../../services/auth/userAuth.service.js";
+import { changePasswordService, forgotPasswordService, loginUserService, registerUserService, resetPasswordService, verifyUserService } from "../../services/auth/auth.service.js";
 
 export const registerUserController = async (req: Request, res: Response, next: NextFunction) => {
     const { token } = await registerUserService(req.body);

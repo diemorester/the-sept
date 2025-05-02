@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { asyncHandler } from "../../helpers/asyncHandler.js";
-import { changePasswordController, forgotPasswordController, loginUserController, registerUserController, resetPasswordController, verifyUserController } from "../../controllers/auth/userAuth.controller.js";
-import { authMiddleware } from "../../middleware/auth.middleware.js";
+import { changePasswordController, forgotPasswordController, loginUserController, registerUserController, resetPasswordController, verifyUserController } from "../../controllers/auth/auth.controller.js";
+import { authMiddleware } from "../../middleware/authentication.js";
 
 const authRouter = Router();
 

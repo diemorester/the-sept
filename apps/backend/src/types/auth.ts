@@ -7,4 +7,4 @@ export type RegisterUser = {
 export type LoginUser = {
     emailOrUsername: string;
     password: string;
-}
+};

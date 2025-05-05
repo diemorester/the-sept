@@ -1,7 +1,12 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import authRouter from './routers/auth/auth.route.js';
 import userRouter from './routers/user/user.route.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const createApp = (): Express => {
     const app = express();
@@ -10,12 +15,21 @@ export const createApp = (): Express => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+    app.use('/public', express.static(path.join(__dirname, '../public')));
+
+    console.log('Serving static from:', path.resolve(__dirname, '../public'));
+
     app.get('/api', (req: Request, res: Response) => {
         res.send('the-sept');
     });
 
     app.use('/api/auth', authRouter);
     app.use('/api/user', userRouter);
+
+    app.use((req: Request, res: Response, next: NextFunction) => {
+        console.log(`[STATIC] ${req.method} ${req.path}`);
+        next();
+      });
 
     app.use((req: Request, res: Response, next: NextFunction) => {
         if (req.path.includes('/api')) {

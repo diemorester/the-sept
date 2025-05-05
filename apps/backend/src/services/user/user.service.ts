@@ -1,6 +1,8 @@
 import generateToken from "../../libs/generateToken.js";
 import prisma from "../../prisma.js";
+import path from 'path';
 import { EditUser } from "../../types/user.js";
+import { removeExistingFiles } from "../../libs/removeFile.js";
 
 export const getMeService = async (userId: string) => {
     const user = await prisma.user.findUnique({
@@ -69,7 +71,7 @@ export const editUserService = async (body: EditUser, id: string, file?: string)
     if (!user) throw new Error('User not found');
 
     const avatar = file
-        ? `${process.env.BASE_URL}/public/avatar/${file}`
+        ? `${process.env.BASE_URL_API}/public/avatar/${file}`
         : user.avatar;
 
     const updatedUser = await prisma.user.update({
@@ -88,4 +90,26 @@ export const editUserService = async (body: EditUser, id: string, file?: string)
     const token = generateToken(payload, '1d');
 
     return { updatedUser, token };
+};
+
+export const removeAvatarService = async (id: string) => {
+    const user = await prisma.user.findUnique({
+        where: { id }
+    });
+
+    if (!user) throw new Error('User not found');
+    if (!user.avatar) throw new Error('Avatar has already been removed');
+
+    const avatarPath = path.join(process.cwd(), 'public', 'avatar', user.avatar);
+
+    await removeExistingFiles(avatarPath);
+
+    const updatedUser = await prisma.user.update({
+        where: {id},
+        data: {
+            avatar: null
+        },
+    });
+
+    return updatedUser;
 };
